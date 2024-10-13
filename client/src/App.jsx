@@ -20,7 +20,8 @@ function App() {
     return <div>Loading...</div>;
   }
 
-  console.log('authUser', authUser)
+  console.log('authUser', authUser);
+  console.log('checkAuth', checkAuth)
 
   if (checkingAuth) return null;
 
@@ -35,6 +36,7 @@ function App() {
 
       <Toaster />
     </div>
+
   );
 }
 
