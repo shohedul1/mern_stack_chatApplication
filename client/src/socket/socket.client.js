@@ -1,6 +1,6 @@
 import io from "socket.io-client";
 
-// const SOCKET_URL = 'http://localhost:5000';
+const SOCKET_URL = import.meta.env.VITE_BACKEND_URL;
 
 let socket = null;
 
@@ -9,7 +9,7 @@ export const initializeSocket = (userId) => {
         socket.disconnect();
     }
 
-    socket = io(import.meta.env.VITE_BACKEND_URL, {
+    socket = io(SOCKET_URL, {
         auth: { userId },
     });
 };

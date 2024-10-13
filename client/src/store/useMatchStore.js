@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import toast from "react-hot-toast";
 import { getSocket } from "../socket/socket.client";
+import axios from "axios";
 
 export const useMatchStore = create((set) => ({
     matches: [],
@@ -9,14 +10,14 @@ export const useMatchStore = create((set) => ({
     userProfiles: [],
     swipeFeedback: null,
 
+
     getMyMatches: async () => {
         try {
             set({ isLoadingMyMatches: true });
-            const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/matches`,
-                {
-                    withCredentials: true,
-                }
-            );
+            const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/matches`, {
+                withCredentials: true,
+            });
+            console.log('res', res);
             set({ matches: res.data.matches });
         } catch (error) {
             set({ matches: [] });
@@ -25,6 +26,7 @@ export const useMatchStore = create((set) => ({
             set({ isLoadingMyMatches: false });
         }
     },
+
 
     getUserProfiles: async () => {
         try {
@@ -44,12 +46,12 @@ export const useMatchStore = create((set) => ({
     swipeLeft: async (user) => {
         try {
             set({ swipeFeedback: "passed" });
-            await axios.post(`${import.meta.env.VITE_BACKEND_URL}/apimatches/swipe-left/` + user._id, {
+            await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/matches/swipe-left/` + user._id, {}, {
                 withCredentials: true,
-            })
+            });
         } catch (error) {
             console.log(error);
-            toast.error("Failed to swipe left");
+            toast.error(error.response?.data?.message || "Failed to swipe left");
         } finally {
             setTimeout(() => set({ swipeFeedback: null }), 1500);
         }
@@ -57,16 +59,17 @@ export const useMatchStore = create((set) => ({
     swipeRight: async (user) => {
         try {
             set({ swipeFeedback: "liked" });
-            await axios.post(`${import.meta.env.VITE_BACKEND_URL}/apimatches/swipe-right/` + user._id, {
+            await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/matches/swipe-right/` + user._id, {}, {
                 withCredentials: true,
-            })
+            });
         } catch (error) {
             console.log(error);
-            toast.error("Failed to swipe right");
+            toast.error(error.response?.data?.message || "Failed to swipe right");
         } finally {
             setTimeout(() => set({ swipeFeedback: null }), 1500);
         }
     },
+
 
     subscribeToNewMatches: () => {
         try {

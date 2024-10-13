@@ -1,5 +1,7 @@
 import User from "../models/User.js";
 import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
+
 
 const signToken = (id) => {
     // jwt token
@@ -41,10 +43,14 @@ export const signup = async (req, res) => {
             });
         }
 
+        //passwordvalidaion
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+
         const newUser = await User.create({
             name,
             email,
-            password,
+            password: hashedPassword,
             age,
             gender,
             genderPreference,
@@ -80,13 +86,10 @@ export const login = async (req, res) => {
             });
         }
 
-        const user = await User.findOne({ email }).select("+password");
+        const user = await User.findOne({ email });
 
-        if (!user || !(await user.matchPassword(password))) {
-            return res.status(401).json({
-                success: false,
-                message: "Invalid email or password",
-            });
+        if (!user || !(await bcrypt.compare(password, user.password))) {
+            return res.status(400).json({ status: true, message: "Invalid Credential" })
         }
 
         const token = signToken(user._id);
@@ -101,6 +104,7 @@ export const login = async (req, res) => {
 
         return res.status(200).json({
             success: true,
+            message: "user login successfull",
             user,
         });
     } catch (error) {

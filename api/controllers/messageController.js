@@ -21,7 +21,7 @@ export const sendMessage = async (req, res) => {
 			});
 		}
 
-		return res.status(201).json({
+		res.status(201).json({
 			success: true,
 			message: newMessage,
 		});
@@ -44,7 +44,7 @@ export const getConversation = async (req, res) => {
 			],
 		}).sort("createdAt");
 
-		return res.status(200).json({
+		res.status(200).json({
 			success: true,
 			messages,
 		});

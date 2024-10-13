@@ -52,6 +52,7 @@ export const useAuthStore = create((set) => ({
                     withCredentials: true, // Important for cookie management
                 }
             );
+            disconnectSocket();
 
             if (res.status === 200) {
                 // Clear the authUser state
