@@ -21,7 +21,6 @@ function App() {
   }
 
   console.log('authUser', authUser);
-  console.log('checkAuth', checkAuth)
 
   if (checkingAuth) return null;
 

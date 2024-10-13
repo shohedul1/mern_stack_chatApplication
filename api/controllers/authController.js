@@ -110,6 +110,13 @@ export const login = async (req, res) => {
 };
 
 export const logout = async (req, res) => {
-    res.clearCookie("jwt");
-    res.status(200).json({ success: true, message: "Logged out successfully" });
+    res.clearCookie("jwt", {
+        httpOnly: true,
+        sameSite: 'None',
+        secure: true,  // Should be true if your application is running on HTTPS
+        path: '/' // Specify the same path as the cookie was set
+    });
+
+    return res.status(200).json({ success: true, message: "Logged out successfully" });
 };
+

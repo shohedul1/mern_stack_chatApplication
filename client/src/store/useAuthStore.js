@@ -41,15 +41,29 @@ export const useAuthStore = create((set) => ({
             set({ loading: false });
         }
     },
+
     logout: async () => {
         try {
-            const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/auth/logout`);
-            disconnectSocket();
-            if (res.status === 200) set({ authUser: null });
+            // Send the logout request with credentials
+            const res = await axios.post(
+                `${import.meta.env.VITE_BACKEND_URL}/api/auth/logout`,
+                {}, // You can send an empty object if needed
+                {
+                    withCredentials: true, // Important for cookie management
+                }
+            );
+
+            if (res.status === 200) {
+                // Clear the authUser state
+                set({ authUser: null });
+                toast.success(res.data.message);
+            }
         } catch (error) {
-            toast.error(error.response.data.message || "Something went wrong");
+            toast.error(error.response?.data?.message || "Something went wrong");
         }
     },
+
+
     checkAuth: async () => {
         try {
             const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/auth/me`, {
