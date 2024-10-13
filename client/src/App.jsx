@@ -15,6 +15,13 @@ function App() {
     checkAuth();
   }, [checkAuth]);
 
+  if (checkingAuth) {
+    // Render a loader or placeholder while checking authentication
+    return <div>Loading...</div>;
+  }
+
+  console.log('authUser', authUser)
+
   if (checkingAuth) return null;
 
   return (

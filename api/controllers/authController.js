@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 const signToken = (id) => {
     // jwt token
     return jwt.sign({ id }, process.env.JWT_SECRET, {
-        expiresIn: "10d",
+        expiresIn: "7d",
     });
 };
 
@@ -55,8 +55,8 @@ export const signup = async (req, res) => {
         res.cookie("jwt", token, {
             maxAge: 7 * 24 * 60 * 60 * 1000,
             httpOnly: true,
-            sameSite: process.env.NODE_ENV === "production" ? "None" : "Strict",
-            secure: process.env.NODE_ENV === "production",
+            sameSite: 'None',
+            secure: true,
         });
 
 
@@ -90,15 +90,16 @@ export const login = async (req, res) => {
         }
 
         const token = signToken(user._id);
+
         res.cookie("jwt", token, {
             maxAge: 7 * 24 * 60 * 60 * 1000,
             httpOnly: true,
-            sameSite: process.env.NODE_ENV === "production" ? "None" : "Strict",
-            secure: process.env.NODE_ENV === "production",
+            sameSite: 'None',
+            secure: true,
         });
 
 
-        res.status(200).json({
+        return res.status(200).json({
             success: true,
             user,
         });
